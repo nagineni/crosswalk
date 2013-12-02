@@ -34,6 +34,7 @@
 #include "xwalk/runtime/browser/runtime_registry.h"
 #include "xwalk/runtime/common/xwalk_runtime_features.h"
 #include "xwalk/runtime/extension/runtime_extension.h"
+#include "xwalk/sysapps/device_capabilities_new/device_capabilities_extension.h"
 #include "xwalk/sysapps/raw_socket/raw_socket_extension.h"
 
 namespace {
@@ -167,6 +168,8 @@ void XWalkBrowserMainPartsAndroid::CreateInternalExtensionsForUIThread(
   // https://crosswalk-project.org/jira/browse/XWALK-674
   // TODO(yongsheng): Remove this implementation once above 2 features
   // are ready for Android.
+  if (XWalkRuntimeFeatures::isDeviceCapabilitiesAPIEnabled())
+    extensions->push_back(new sysapps::DeviceCapabilitiesExtension());
 }
 
 void XWalkBrowserMainPartsAndroid::RegisterExtension(
