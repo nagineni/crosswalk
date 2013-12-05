@@ -37,5 +37,6 @@
   ],
   'dependencies': [
     'sysapps/sysapps_resources.gyp:xwalk_sysapps_resources',
+    'sysapps/sysapps_storage_monitor.gyp:chrome_storage_monitor',
   ],
 }
