@@ -9,6 +9,8 @@
     'common/sysapps_manager.cc',
     'common/sysapps_manager.h',
     'device_capabilities_new/av_codecs_provider.h',
+    'device_capabilities_new/av_codecs_provider_linux.h',
+    'device_capabilities_new/av_codecs_provider_linux.cc',
     'device_capabilities_new/cpu_info_provider.cc',
     'device_capabilities_new/cpu_info_provider.h',
     'device_capabilities_new/cpu_info_provider_android.cc',
@@ -50,5 +52,12 @@
   'dependencies': [
     'sysapps/sysapps_resources.gyp:xwalk_sysapps_resources',
     'sysapps/sysapps_storage_monitor.gyp:chrome_storage_monitor',
+  ],
+  'conditions': [
+    ['OS=="linux"', {
+      'dependencies': [
+        '../third_party/ffmpeg/ffmpeg.gyp:ffmpeg',
+      ],
+    }],
   ],
 }
