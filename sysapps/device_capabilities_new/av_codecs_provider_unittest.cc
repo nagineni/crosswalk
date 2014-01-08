@@ -7,6 +7,7 @@
 
 #include <vector>
 
+#include "media/base/media.h"
 #include "testing/gtest/include/gtest/gtest.h"
 #include "xwalk/sysapps/common/sysapps_manager.h"
 #include "xwalk/sysapps/device_capabilities_new/device_capabilities.h"
@@ -17,8 +18,9 @@ using xwalk::jsapi::device_capabilities::SystemAVCodecs;
 using xwalk::sysapps::AVCodecsProvider;
 
 TEST(XWalkSysAppsDeviceCapabilitiesTest, AVCodecsProvider) {
-  xwalk::sysapps::SysAppsManager manager;
+  media::InitializeMediaLibraryForTesting();
 
+  xwalk::sysapps::SysAppsManager manager;
   AVCodecsProvider* provider(manager.GetAVCodecsProvider());
   EXPECT_TRUE(provider != NULL);
 

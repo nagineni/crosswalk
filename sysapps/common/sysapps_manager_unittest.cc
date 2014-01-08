@@ -9,6 +9,7 @@
 #include "base/memory/scoped_ptr.h"
 #include "base/path_service.h"
 #include "base/stl_util.h"
+#include "media/base/media.h"
 #include "testing/gtest/include/gtest/gtest.h"
 #include "ui/base/resource/resource_bundle.h"
 #include "xwalk/extensions/common/xwalk_extension.h"
@@ -40,6 +41,8 @@ class XWalkSysAppsManagerTest : public ::testing::Test {
 
     base::FilePath pak_file = pak_dir.Append(FILE_PATH_LITERAL("xwalk.pak"));
     ui::ResourceBundle::InitSharedInstanceWithPakPath(pak_file);
+
+    media::InitializeMediaLibraryForTesting();
   }
 };
 
