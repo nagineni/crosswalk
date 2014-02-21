@@ -93,6 +93,8 @@ class NativeAppWindowViews : public NativeAppWindow,
   virtual void OnWidgetBoundsChanged(
       views::Widget* widget, const gfx::Rect& new_bounds) OVERRIDE;
 
+  virtual void WillDestroyDelegate() OVERRIDE;
+
   NativeAppWindow::CreateParams create_params_;
 
   NativeAppWindowDelegate* delegate_;

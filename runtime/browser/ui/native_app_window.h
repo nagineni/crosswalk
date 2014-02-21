@@ -103,6 +103,9 @@ class NativeAppWindow {
   virtual bool IsMinimized() const = 0;
   virtual bool IsFullscreen() const = 0;
 
+  // Called when the runtime is being destroyed..
+  virtual void WillDestroyDelegate() = 0;
+
  protected:
   virtual ~NativeAppWindow() {}
 };

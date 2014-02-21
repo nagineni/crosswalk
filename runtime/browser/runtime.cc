@@ -88,6 +88,11 @@ Runtime::Runtime(content::WebContents* web_contents, Observer* observer)
 }
 
 Runtime::~Runtime() {
+  if (window_) {
+    window_->WillDestroyDelegate();
+    window_->Close();
+    window_ = NULL;
+  }
   content::NotificationService::current()->Notify(
           xwalk::NOTIFICATION_RUNTIME_CLOSED,
           content::Source<Runtime>(this),

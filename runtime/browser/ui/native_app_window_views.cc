@@ -106,6 +106,10 @@ void NativeAppWindowViews::SetBounds(const gfx::Rect& bounds) {
   window_->SetBounds(bounds);
 }
 
+void NativeAppWindowViews::WillDestroyDelegate() {
+  delegate_ = NULL;
+}
+
 void NativeAppWindowViews::Focus() {
   // window_->Focus();
 }
@@ -195,7 +199,8 @@ base::string16 NativeAppWindowViews::GetWindowTitle() const {
 
 void NativeAppWindowViews::DeleteDelegate() {
   window_->RemoveObserver(this);
-  delegate_->OnWindowDestroyed();
+  if (delegate_)
+    delegate_->OnWindowDestroyed();
   delete this;
 }
 gfx::ImageSkia NativeAppWindowViews::GetWindowAppIcon() {
