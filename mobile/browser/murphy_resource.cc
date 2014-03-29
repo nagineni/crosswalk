@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "xwalk/tizen/browser/murphy_resource.h"
+#include "xwalk/mobile/browser/murphy_resource.h"
 
 #include "xwalk/mobile/browser/browser_mediaplayer_manager.h"
 

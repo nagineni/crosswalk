@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#include "murphy_mainloop.h"
 #include "murphy_resource_manager.h"
 
 #include "xwalk/mobile/browser/browser_mediaplayer_manager.h"
@@ -10,6 +11,7 @@ namespace tizen {
 
 MurphyResourceManager::MurphyResourceManager(BrowserMediaPlayerManager* manager)
     : manager_(manager),
+      mainloop_(new MurphyMainloop()),
       m_ctx(NULL) {
   m_ml = mrp_mainloop_glib_get(NULL);
 }
@@ -19,6 +21,8 @@ MurphyResourceManager::~MurphyResourceManager() {
 
   if (m_ctx)
     mrp_res_destroy(m_ctx);
+
+  delete mainloop_;
 }
 
 static void state_cb(mrp_res_context_t *cx, mrp_res_error_t err, void *userdata)

@@ -10,6 +10,8 @@
 #include <murphy/glib/glib-glue.h>
 #include <murphy/plugins/resource-native/libmurphy-resource/resource-api.h>
 
+#include "murphy_mainloop.h"
+
 namespace tizen {
 class BrowserMediaPlayerManager;
 
@@ -31,6 +33,8 @@ public:
 
 private:
     BrowserMediaPlayerManager*  manager_;
+    MurphyMainloop *mainloop_;
+
     mrp_res_context_t *m_ctx;
     mrp_mainloop_t *m_ml;
     GMainLoop* gml_;
