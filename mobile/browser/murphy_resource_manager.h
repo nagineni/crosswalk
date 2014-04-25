@@ -28,16 +28,17 @@ public:
 
     bool connectToMurphy();
     void disconnectFromMurphy();
+    bool startReconnect();
+    void stopReconnect();
     bool isConnected();
     mrp_res_context_t * getContext();
 
 private:
     BrowserMediaPlayerManager*  manager_;
     MurphyMainloop *mainloop_;
-
-    mrp_res_context_t *m_ctx;
-    mrp_mainloop_t *m_ml;
-    GMainLoop* gml_;
+    mrp_mainloop_t *ml_;
+    mrp_res_context_t *ctx_;
+    mrp_timer_t *reconnect_;
 };
 
 }

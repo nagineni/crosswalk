@@ -12,22 +12,38 @@ namespace tizen {
 MurphyResourceManager::MurphyResourceManager(BrowserMediaPlayerManager* manager)
     : manager_(manager),
       mainloop_(new MurphyMainloop()),
-      m_ctx(NULL) {
-  m_ml = mrp_mainloop_glib_get(NULL);
+      ml_(NULL),
+      ctx_(NULL),
+      reconnect_(NULL)
+ {
+  ml_ = mainloop_->getMainloop();
+  connectToMurphy();
 }
 
 MurphyResourceManager::~MurphyResourceManager() {
   disconnectFromMurphy();
 
-  if (m_ctx)
-    mrp_res_destroy(m_ctx);
+  if (ctx_)
+    mrp_res_destroy(ctx_);
 
   delete mainloop_;
 }
 
+
 static void state_cb(mrp_res_context_t *cx, mrp_res_error_t err, void *userdata)
 {
-  printf("===%s==\n", __FUNCTION__);
+  MurphyResourceManager *m = static_cast<MurphyResourceManager *>(userdata);
+
+  if (err) {
+    printf("*** %s: resource connection down (error %d)\n", __FUNCTION__,
+           err);
+    m->startReconnect();
+  }
+  else {
+    printf("*** %s: resource connection up\n", __FUNCTION__);
+    m->stopReconnect();
+  }
+
 #if 0
     MurphyResourceManager *m = (MurphyResourceManager *) userdata;
     Vector<MurphyObserver *> observers = m->getObservers();
@@ -53,38 +69,67 @@ static void state_cb(mrp_res_context_t *cx, mrp_res_error_t err, void *userdata)
 #endif
 }
 
+
+static void reconnect_cb(mrp_timer_t *t, void *user_data)
+{
+  MurphyResourceManager *m = static_cast<MurphyResourceManager *>(user_data);
+
+  m->connectToMurphy();
+}
+
+
+bool MurphyResourceManager::startReconnect()
+{
+  if (reconnect_)
+    return true;
+
+  reconnect_ = mrp_add_timer(ml_, 5000, reconnect_cb, this);
+
+  return reconnect_ != NULL;
+}
+
+
+void MurphyResourceManager::stopReconnect()
+{
+  mrp_del_timer(reconnect_);
+  reconnect_ = NULL;
+}
+
+
 bool MurphyResourceManager::connectToMurphy()
 {
-  if (!m_ml)
-    return FALSE;
+  if (ctx_) {
+    mrp_res_destroy(ctx_);
+    ctx_ = NULL;
+  }
 
-  if (!m_ctx)
-    m_ctx = mrp_res_create(m_ml, state_cb, this);
+  if (!ctx_)
+    ctx_ = mrp_res_create(ml_, state_cb, this);
 
-  return m_ctx != NULL;
+  return ctx_ != NULL;
 }
 
 bool MurphyResourceManager::isConnected()
 {
-  if (!m_ctx)
+  if (!ctx_)
     return FALSE;
 
-  return m_ctx->state == MRP_RES_CONNECTED;
+  return ctx_->state == MRP_RES_CONNECTED;
 }
 
 
 void MurphyResourceManager::disconnectFromMurphy()
 {
-  if (!m_ctx)
+  if (!ctx_)
     return;
 
-  mrp_res_destroy(m_ctx);
-  m_ctx = NULL;
+  mrp_res_destroy(ctx_);
+  ctx_ = NULL;
 }
 
 mrp_res_context_t * MurphyResourceManager::getContext()
 {
-    return m_ctx;
+    return ctx_;
 }
 
 }
