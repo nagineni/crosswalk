@@ -4,29 +4,33 @@
 // found in the LICENSE file.
 
 
-#ifndef XWALK_TIZEN_RENDERER_MEDIAPLAYER_IMPL_H_
-#define XWALK_TIZEN_RENDERER_MEDIAPLAYER_IMPL_H_
+#ifndef XWALK_TIZEN_RENDERER_MEDIAPLAYER_MS_H_
+#define XWALK_TIZEN_RENDERER_MEDIAPLAYER_MS_H_
 
 #include "base/memory/scoped_ptr.h"
 #include "base/memory/weak_ptr.h"
-#include "content/renderer/media/webmediaplayer_impl.h"
+#include "content/renderer/media/webmediaplayer_ms.h"
 #include "xwalk/mobile/renderer/renderer_mediaplayer_manager.h"
+
+namespace blink {
+class WebMediaPlayerClient;
+}
 
 namespace tizen {
 
-// Substitute for WebMediaPlayerImpl to be used in Tizen.
-class MediaPlayerImpl : public content::WebMediaPlayerImpl,
-                        public MediaPlayerObserver {
+// Substitute for WebMediaPlayerMS to be used in Tizen.
+class MediaPlayerMS : public content::WebMediaPlayerMS,
+                      public MediaPlayerObserver {
  public:
-  MediaPlayerImpl(
-      blink::WebLocalFrame* frame,
-      blink::WebMediaPlayerClient* client,
-      base::WeakPtr<content::WebMediaPlayerDelegate> delegate,
-      RendererMediaPlayerManager* manager,
-      const content::WebMediaPlayerParams& params);
-  virtual ~MediaPlayerImpl();
+  MediaPlayerMS(blink::WebFrame* frame,
+                blink::WebMediaPlayerClient* client,
+                base::WeakPtr<content::WebMediaPlayerDelegate> delegate,
+                content::MediaStreamClient* media_stream_client,
+                media::MediaLog* media_log,
+                RendererMediaPlayerManager* manager);
+  virtual ~MediaPlayerMS();
 
-  // WebMediaPlayerImpl method.
+  // WebMediaPlayerMS method.
   virtual void load(LoadType load_type,
                     const blink::WebURL& url,
                     CORSMode cors_mode) OVERRIDE;
@@ -54,9 +58,9 @@ class MediaPlayerImpl : public content::WebMediaPlayerImpl,
 
   blink::WebMediaPlayerClient* client_;
 
-  DISALLOW_COPY_AND_ASSIGN(MediaPlayerImpl);
+  DISALLOW_COPY_AND_ASSIGN(MediaPlayerMS);
 };
 
 }  // namespace tizen
 
-#endif  // XWALK_TIZEN_RENDERER_MEDIAPLAYER_IMPL_H_
+#endif  // XWALK_TIZEN_RENDERER_MEDIAPLAYER_MS_H_

@@ -15,7 +15,8 @@ class MurphyResource {
  public:
   MurphyResource(BrowserMediaPlayerManager* manager,
       MediaPlayerID player_id,
-      MurphyResourceManager* resource_manager);
+      MurphyResourceManager* resource_manager,
+      bool has_video);
   ~MurphyResource();
 
   void AcquireResource();

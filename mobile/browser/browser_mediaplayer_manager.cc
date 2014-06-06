@@ -83,12 +83,13 @@ void BrowserMediaPlayerManager::ResourceNotifyCallback(
 void BrowserMediaPlayerManager::OnInitialize(
     MediaPlayerID player_id,
     int process_id,
-    const GURL& url) {
+    const GURL& url,
+    bool has_video) {
 
   // Create murphy resource for the given player id.
   if (resource_manager_ && resource_manager_->IsConnected()) {
     MurphyResource* resource = new MurphyResource(this,
-        player_id, resource_manager_.get());
+        player_id, resource_manager_.get(), has_video);
     RemoveMurphyResource(player_id);
     AddMurphyResource(resource);
   }

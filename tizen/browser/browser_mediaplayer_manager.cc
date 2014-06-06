@@ -102,7 +102,9 @@ static ASM_cb_result_t AudioSessionNotifyCallback(
 void BrowserMediaPlayerManager::OnInitialize(
     MediaPlayerID player_id,
     int process_id,
-    const GURL& url) {
+    const GURL& url,
+    bool has_audio,
+    bool has_video) {
 
   // Initialize the audio session manager library.
   if (!InitializeAudioSessionManager()) {

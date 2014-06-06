@@ -17,10 +17,10 @@ RendererMediaPlayerManager::RendererMediaPlayerManager(
 }
 
 RendererMediaPlayerManager::~RendererMediaPlayerManager() {
-  std::map<MediaPlayerID, MediaPlayerImpl*>::iterator player_it;
+  std::map<MediaPlayerID, MediaPlayerObserver*>::iterator player_it;
   for (player_it = media_players_.begin();
       player_it != media_players_.end(); ++player_it) {
-    MediaPlayerImpl* player = player_it->second;
+    MediaPlayerObserver* player = player_it->second;
     player->Detach();
   }
 
@@ -40,9 +40,10 @@ bool RendererMediaPlayerManager::OnMessageReceived(const IPC::Message& msg) {
 void RendererMediaPlayerManager::Initialize(
     MediaPlayerID player_id,
     int process_id,
-    const GURL& url) {
+    const GURL& url,
+    bool has_video) {
   Send(new MediaPlayerHostMsg_MediaPlayerInitialize(
-      routing_id(), player_id, process_id, url));
+      routing_id(), player_id, process_id, url, has_video));
 }
 
 void RendererMediaPlayerManager::Start(MediaPlayerID player_id) {
@@ -58,7 +59,7 @@ void RendererMediaPlayerManager::DestroyPlayer(MediaPlayerID player_id) {
 }
 
 MediaPlayerID RendererMediaPlayerManager::RegisterMediaPlayer(
-    MediaPlayerImpl* player) {
+    MediaPlayerObserver* player) {
   media_players_[next_media_player_id_] = player;
 
   return next_media_player_id_++;
@@ -69,9 +70,9 @@ void RendererMediaPlayerManager::UnregisterMediaPlayer(
   media_players_.erase(player_id);
 }
 
-MediaPlayerImpl* RendererMediaPlayerManager::GetMediaPlayer(
+MediaPlayerObserver* RendererMediaPlayerManager::GetMediaPlayer(
     MediaPlayerID player_id) {
-  std::map<MediaPlayerID, MediaPlayerImpl*>::iterator iter =
+  std::map<MediaPlayerID, MediaPlayerObserver*>::iterator iter =
       media_players_.find(player_id);
   if (iter != media_players_.end())
     return iter->second;
@@ -80,12 +81,12 @@ MediaPlayerImpl* RendererMediaPlayerManager::GetMediaPlayer(
 }
 
 void RendererMediaPlayerManager::OnPlayerPlay(MediaPlayerID player_id) {
-  if (MediaPlayerImpl* player = GetMediaPlayer(player_id))
+  if (MediaPlayerObserver* player = GetMediaPlayer(player_id))
     player->OnMediaPlayerPlay();
 }
 
 void RendererMediaPlayerManager::OnPlayerPause(MediaPlayerID player_id) {
-  if (MediaPlayerImpl* player = GetMediaPlayer(player_id))
+  if (MediaPlayerObserver* player = GetMediaPlayer(player_id))
     player->OnMediaPlayerPause();
 }
 

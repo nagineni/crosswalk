@@ -43,7 +43,7 @@ class CONTENT_EXPORT BrowserMediaPlayerManager
 
  private:
   virtual void OnInitialize(MediaPlayerID player_id,
-      int process_id, const GURL& url);
+      int process_id, const GURL& url, bool has_audio, bool has_video);
   virtual void OnDestroyAllMediaPlayers();
   virtual void OnDestroyPlayer(MediaPlayerID player_id);
   virtual void OnPause(MediaPlayerID player_id);

@@ -36,10 +36,11 @@ IPC_MESSAGE_ROUTED1(MediaPlayerHostMsg_DestroyMediaPlayer,  // NOLINT(*)
 IPC_MESSAGE_ROUTED0(MediaPlayerHostMsg_DestroyAllMediaPlayers)  // NOLINT(*)
 
 // Initialize a media player object with the given player_id.
-IPC_MESSAGE_ROUTED3(MediaPlayerHostMsg_MediaPlayerInitialize,  // NOLINT(*)
+IPC_MESSAGE_ROUTED4(MediaPlayerHostMsg_MediaPlayerInitialize,  // NOLINT(*)
                     int /* player_id */,
                     int /* process_id */,
-                    GURL /* url */)
+                    GURL /* url */,
+                    bool /* has_video */)
 
 // The player was paused.
 IPC_MESSAGE_ROUTED1(MediaPlayerHostMsg_MediaPlayerPaused,  // NOLINT(*)

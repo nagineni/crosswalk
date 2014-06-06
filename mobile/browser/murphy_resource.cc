@@ -9,7 +9,8 @@
 namespace {
 
 const char kMediaApplicationClass[] = "player";
-const char kMediaStreamName[] = "audio_playback";
+const char kMediaAudioStream[] = "audio_playback";
+const char kMediaVideoStream[] = "video_playback";
 const char kMediaRole[] = "browser";
 
 static void NotifyCallback(mrp_res_context_t* context,
@@ -32,7 +33,8 @@ namespace tizen {
 MurphyResource::MurphyResource(
     BrowserMediaPlayerManager* manager,
     MediaPlayerID player_id,
-    MurphyResourceManager* resource_manager)
+    MurphyResourceManager* resource_manager,
+    bool has_video)
     : manager_(manager),
       player_id_(player_id),
       resource_manager_(resource_manager),
@@ -47,11 +49,16 @@ MurphyResource::MurphyResource(
     return;
 
   mrp_res_resource_t* resource = mrp_res_create_resource(context,
-      resource_set_, kMediaStreamName, true, true);
+      resource_set_, kMediaAudioStream, true, true);
+
   mrp_res_attribute_t* attr = mrp_res_get_attribute_by_name(
       context, resource, "role");
   if (attr)
     mrp_res_set_attribute_string(context, attr, kMediaRole);
+
+  if (has_video)
+     mrp_res_create_resource(context, resource_set_,
+         kMediaVideoStream, true, true);
 
   mrp_res_release_resource_set(context, resource_set_);
 }
@@ -59,7 +66,6 @@ MurphyResource::MurphyResource(
 void MurphyResource::AcquireResource() {
   if (!resource_manager_ || !resource_set_)
     return;
-
   // Call acquire
   mrp_res_acquire_resource_set(resource_manager_->GetContext(), resource_set_);
 }

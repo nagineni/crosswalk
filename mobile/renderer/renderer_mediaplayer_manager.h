@@ -13,9 +13,18 @@
 #include "url/gurl.h"
 
 namespace tizen {
-class MediaPlayerImpl;
 
 typedef int MediaPlayerID;
+
+class MediaPlayerObserver {
+ public:
+  MediaPlayerObserver() {};
+  virtual ~MediaPlayerObserver() {};
+
+  virtual void Detach() = 0;
+  virtual void OnMediaPlayerPlay() = 0;
+  virtual void OnMediaPlayerPause() = 0;
+};
 
 // Class for managing all the MediaPlayerImpl objects in the same
 // RenderView.
@@ -31,7 +40,8 @@ class RendererMediaPlayerManager : public content::RenderViewObserver {
   // Initializes a BrowserMediaPlayerManager object in browser process.
   void Initialize(MediaPlayerID player_id,
                   int procedd_id,
-                  const GURL& url);
+                  const GURL& url,
+                  bool has_video);
 
   // Starts the player.
   void Start(MediaPlayerID player_id);
@@ -43,22 +53,22 @@ class RendererMediaPlayerManager : public content::RenderViewObserver {
   void DestroyPlayer(MediaPlayerID player_id);
 
   // Register a MediaPlayerImpl object and return the ID of the player.
-  MediaPlayerID RegisterMediaPlayer(MediaPlayerImpl* player);
+  MediaPlayerID RegisterMediaPlayer(MediaPlayerObserver* player);
 
   // Unregister a MediaPlayerImpl object of given |player_id|.
   void UnregisterMediaPlayer(MediaPlayerID player_id);
 
  private:
   // Get the pointer to MediaPlayerImpl of given |player_id|.
-  MediaPlayerImpl* GetMediaPlayer(MediaPlayerID player_id);
+  MediaPlayerObserver* GetMediaPlayer(MediaPlayerID player_id);
 
   // Message handlers.
   void OnPlayerPlay(MediaPlayerID player_id);
   void OnPlayerPause(MediaPlayerID player_id);
 
-  // Info for all available MediaPlayerImpl on a page; kept so that
+  // Info for all available MediaPlayers on a page; kept so that
   // we can enumerate them to send updates.
-  std::map<MediaPlayerID, MediaPlayerImpl*> media_players_;
+  std::map<MediaPlayerID, MediaPlayerObserver*> media_players_;
 
   MediaPlayerID next_media_player_id_;
 
